@@ -34,8 +34,38 @@ class PostsController extends  AppController{
         if($this->request->is('get')){
             $this->request->data = $this->Post->read();
         } else {
+            if($this->Post->save($this->request->data)){
+                $this->Session->setFlash('Success!');
+                $this->redirect(array('action'=>'index'));
+            }else{
+                $this->Session->setFlash('failed!');
+            }
             
         }
+    }
+    
+    public function delete($id){
+        if($this->request->is('get')){
+            throw new MethodNotAllowedException();
+        }
+        /*
+        if($this->Post->delete($id)){
+            $this->Session->setFlash('Deleted!');
+            $this->redirect(array('action'=>'index'));
+        }
+        */
+        if($this->request->is('ajax')){
+            if($this->Post->delete($id)){
+                $this->autoRender = false;
+                $this->AutoLayout = false;
+                $response = array('id' => $id);
+                $this->header('Contenet-Type:application/json');
+                echo json_encode($response);
+                exit();
+            }
+        }
+        $this->redirect(array('action'=>'index'));
+        
     }
     
 }
