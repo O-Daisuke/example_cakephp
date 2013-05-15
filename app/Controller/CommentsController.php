@@ -6,9 +6,9 @@ class CommentsController extends  AppController{
     
     public function add(){
         if($this->request->is('post')){
-            if($this->Post->save($this->request->data)){
+            if($this->Comment->save($this->request->data)){
                 $this->Session->setFlash('Success!');
-                $this->redirect(array('action'=>'index'));
+                $this->redirect(array('controller'=>'posts','action'=>'view',$this->data['Comment']['post_id']));
             }else{
                 $this->Session->setFalse('failed!');
             }
@@ -20,7 +20,7 @@ class CommentsController extends  AppController{
             throw new MethodNotAllowedException();
         }
         if($this->request->is('ajax')){
-            if($this->Post->delete($id)){
+            if($this->Comment->delete($id)){
                 $this->autoRender = false;
                 $this->AutoLayout = false;
                 $response = array('id' => $id);
@@ -29,7 +29,7 @@ class CommentsController extends  AppController{
                 exit();
             }
         }
-        $this->redirect(array('action'=>'index'));
+        $this->redirect(array('controller'=>'posts','action'=>'view',$this->data['Comment']['post_id']));
         
     }
     
